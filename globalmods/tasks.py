@@ -14,7 +14,7 @@ from allianceauth.eveonline.tasks import update_alliance, update_character, upda
 logger = logging.getLogger(__name__)
 
 TASK_PRIORITY = 7
-CHUNK_SIZE = 1000
+CHUNK_SIZE = 999
 
 @shared_task
 def run_model_update():
@@ -42,6 +42,7 @@ def run_bulk_character_model_update():  # In Bulk!
             affiliation = providers.provider.client.Character\
                 .post_characters_affiliation(characters=character_chunk).result()
         except:
+            logging.error("Bulk Lookup Failed")
             continue # bad chunk, skip
 
         names = [] 
