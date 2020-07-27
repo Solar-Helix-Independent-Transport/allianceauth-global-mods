@@ -8,6 +8,6 @@ jobs:
         - run: pip install tox && tox
 workflows:
   version: 2
-  myproj:
+  GlobalMods:
     jobs:
       - RunTests
