@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  Build:
+  BuildAndTest:
     docker:
       - image: circleci/python:3.7
     steps:
@@ -13,21 +13,7 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             make dev
-            pip install tox && tox --notest
-      - save_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
-          paths:
-            - "venv"
-            - ".tox"
-
-  RunTests:
-    docker:
-      - image: circleci/python:3.7
-    steps:
-      - checkout
-      - restore_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
-      - run: pip install tox && tox
+            pip install tox && tox
       - save_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
           paths:
@@ -76,13 +62,10 @@ workflows:
   version: 2
   GlobalMods:
     jobs:
-      - Build
-      - RunTests:
-          requires:
-            - Build
+      - BuildAndTest
       - Deploy:
           requires:
-            - RunTests
+            - BuildAndTest
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
