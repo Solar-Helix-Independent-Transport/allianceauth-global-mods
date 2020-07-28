@@ -71,10 +71,12 @@ workflows:
   GlobalMods:
     jobs:
       - Build
-      - RunTests
-      - Deploy:
+      - RunTests:
           requires:
             - Build
+      - Deploy:
+          requires:
+            - RunTests
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+)*/
