@@ -8,12 +8,17 @@ jobs:
       - restore_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
       - run:
-          name: install python dependencies
+          name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
             make dev
+      - run:
+          name: Run Tests
+          command: |
             pip install tox && tox
+      - store_artifacts:
+          path: htmlcov/
       - save_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}-{{ checksum "Makefile" }}
           paths:
