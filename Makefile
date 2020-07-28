@@ -12,6 +12,7 @@ clean:
 
 dev:
 	pip install -e .
+	pip install twine
 
 package:
 	python setup.py sdist
